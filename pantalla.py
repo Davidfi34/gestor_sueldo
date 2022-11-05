@@ -5,7 +5,8 @@ from admin.db import Consulta
 from crear_doc.doc import pdf
 from dbEmpleados import All, Buscar, Insert
 from empleados import Empleado
-from newEmpleado import CalNeto, Calcular
+from operaciones import CalNeto, Calcular
+from tkcalendar import DateEntry
 
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
@@ -22,6 +23,7 @@ class App(customtkinter.CTk):
         self.info = []
         self.datos = []
         self.dato_usuario = StringVar()
+        self.fechaN = StringVar()
         
     
 
@@ -46,21 +48,15 @@ class App(customtkinter.CTk):
           # ============ PANTALLAS ============ #
         self.Inicio = Frame(master=self.cuadro,background="#E5E7E9")
         self.Registro = Frame(master=self.cuadro,background="#E5E7E9")
-        #self.categorias = Frame(master =self.cuadro,background="white")
-        #self.parametros = Frame(master=self.cuadro,background="white")
         self.cuadro.add(self.Inicio,text='Inicio',padding=10)
         self.cuadro.add(self.Registro,text='Registro',padding=10)
-        #self.cuadro.add(self.categorias,text='Catergorias',padding=10)
-        #self.cuadro.add(self.parametros,text='Parametros',padding=10)
+
              # ============ PANTALLAS ============ #
 
 #=======================BOTON CERRAR SESION ==========================#
         self.titulo = customtkinter.CTkLabel(master=self.menu,
                                                 text="Gestor",
                                                 text_font=("Roboto Medium", -20,)
-                                             # <- custom border_width
-                                          # <- no fg_color
-                                                #command=self.Registro_Empleado
                                                 )
         self.titulo.grid(row=0, column=1, columnspan=2, pady=10, padx=30, sticky="s")
         
@@ -128,8 +124,7 @@ class App(customtkinter.CTk):
 #===================================frame Inicio============================================#
 
 
-        # ============ frame_registro ============#
-
+#========================= FRAME REGISTRO ================================#
 
         self.label_2 = customtkinter.CTkLabel(master=self.Registro,
                                               text="Nuevo registro",
@@ -154,10 +149,8 @@ class App(customtkinter.CTk):
                                             placeholder_text="DNI")
         self.dni.grid(row=4, column=0, columnspan=1, pady=20, padx=30, sticky="n")
 
-        self.fechaN = customtkinter.CTkEntry(master=self.Registro,
-                                          width=300,
-                                            placeholder_text="Fecha de nacimiento")
-        self.fechaN.grid(row=4, column=1, columnspan=1, pady=20, padx=30, sticky="n")
+        self.Ingreso =customtkinter.CTkLabel(self.Registro,text="Fecha de nacimiento",text_font=("Roboto Medium", -14,),text_color='gray').place(x= 390,y=137)
+        self.campofecha = DateEntry(self.Registro,date_pattern='y-mm-dd',width=15,year= 2004,month= 10,day=1,textvariable = self.fechaN).place(x= 660,y=175)
 
         self.direccion = customtkinter.CTkEntry(master=self.Registro,
                                               width=300,
@@ -186,7 +179,9 @@ class App(customtkinter.CTk):
                                                 command=self.Registro_Empleado)
         self.button_2.grid(row=8, column=1, columnspan=1, pady=10, padx=30, sticky="e")
 
-#===================================frame parametros============================================#
+#=========================================================================#
+
+#========= ALERT ===============#
     def abrir(self,texto):
       top = tkinter.Toplevel()
       top.resizable(0,0)
@@ -194,6 +189,7 @@ class App(customtkinter.CTk):
       top.geometry("300x200")
       top = tkinter.Label(top, text=texto)
       top.pack(expand=True)
+#===============================#
 
 #==========REGISTRAR EMPLEADO====================#
     def Registro_Empleado(self):
@@ -211,9 +207,9 @@ class App(customtkinter.CTk):
 
 
 
-#==================================================#
+#====================CLEAR ENTRY==============================#
     def clear(self):
-          self.dni.delete(0, 'end'), self.apellido.delete(0, 'end'), self.nombre.delete(0, 'end'), self.fechaN.delete(0, 'end'),
+          self.dni.delete(0, 'end'), self.apellido.delete(0, 'end'), self.nombre.delete(0, 'end'),
           self.direccion.delete(0, 'end'), self.localidad.delete(0, 'end'), self.telefono.delete(0, 'end')
 #==================================================#
 
@@ -228,7 +224,7 @@ class App(customtkinter.CTk):
       records =self.tree.get_children()
       for element in records:
         self.tree.delete(element)
-      #=================  
+
       total = 0
       query = Consulta()
       getDni = self.buscar_dni.get()
@@ -249,7 +245,6 @@ class App(customtkinter.CTk):
 
             #======AGREGA DATOS PARA DUC ======#
             self.info.append([row[1], (f"{row[2]}{'%'} "),(f"{'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")])
-   
             #===================================#
 
             if row[3] == 1: total -= Calcular(getDni,row[2],row[3])
@@ -257,22 +252,19 @@ class App(customtkinter.CTk):
 
           self.tree.insert('', 20,text='TOTAL',values=('',(f"{'$'}{round(total,2)}")))
 
-            #======AGREGA DATOS PARA DUC ======#
+          #======AGREGA DATOS PARA DUC ======#
           self.info.append(['TOTAL', "",(f"{'$'}{round(total,2)}")])
-   
-          
-            #===================================#
+          #==================================#
 
        
 
 
 
-    #================= DESCARGA PDF =======================#
-
+#================= DESCARGA PDF =======================#
     def descarga(self):
-        pdf(self.info,self.datos)
-        
-    #======================================================#
+        if len(self.info) > 0 and len(self.datos): pdf(self.info,self.datos)
+
+#======================================================#
         
 
 #===========CERRAR APP================#

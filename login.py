@@ -17,7 +17,8 @@ login.resizable(0,0)
 Consulta()
 
 
-
+#=========VERIFICA ADMINISTRADOR==========#
+#==USURIO = "admin" Y CONTRASENA = 1234 ==#
 def Verificar():
         if LoginDB(entry_us.get(),entry_pass.get()):
             login.destroy()
@@ -26,7 +27,7 @@ def Verificar():
         else:
           abrir()
 
-
+#======= ERROR ========#
 def abrir():
     top = tkinter.Toplevel()
     top.resizable(0,0)
