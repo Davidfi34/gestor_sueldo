@@ -12,6 +12,7 @@ customtkinter.set_default_color_theme("dark-blue")  # Themes: "blue" (standard),
 login = customtkinter.CTk()
 login.geometry("600x500")
 login.title("Login")
+login.iconbitmap("image/icono.ico")
 login.resizable(0,0)
 Consulta()
 
@@ -29,7 +30,7 @@ def Verificar():
 def abrir():
     top = tkinter.Toplevel()
     top.resizable(0,0)
-    #top.iconbitmap("image/icono.ico")
+    top.iconbitmap("image/icono.ico")
     top.geometry("200x100")
     top = tkinter.Label(top, text="Usuario incorrecto")
     top.pack(expand=True)

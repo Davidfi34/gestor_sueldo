@@ -8,7 +8,7 @@ c= conn.cursor()
 #=================INGRESAR NUEVO EMPLEADO ===============#
 def Insert(e,categoria):
     result = False
-    horas = random.randrange(160,180)
+    horas = random.randrange(160,200)
     try:
         c.execute("INSERT INTO empleados VALUES(?,?,?,?,?,?,?)", (e.dni,e.nombre,e.apellido,e.fechaN,e.direccion,e.localidad,e.telefono))
         c.execute("INSERT INTO dato_empleado VALUES(?,?,?)", (e.dni,categoria,horas))
@@ -31,8 +31,6 @@ def Buscar(e):
             print('error')
         
         conn.close()
-        
-       
 #===============================================#
 
 #============TODOS LOS EMPLEADOS==================#
@@ -43,9 +41,6 @@ def All():
     #conn.close()
     return empleados
 #===============================================#
-
-
-
 
 #====================OBTENER HORA X CATEGORIA===========================#
 def getCateg(id):

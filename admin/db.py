@@ -31,7 +31,7 @@ def Crear():
     )""")
     c.execute(""" CREATE TABLE IF NOT EXISTS recibo (
         id_liq INT PRIMARY KEY,
-        monto REAL,
+        data TEXT NOT NULL,
         fecha date
     )""")
     c.execute(""" CREATE TABLE IF NOT EXISTS parametros (
@@ -79,14 +79,12 @@ def LoginDB(usario,contra):
     result = False
     try:
         c.execute("SELECT * FROM administrador WHERE usuario = ? AND contra = ?",(usario,contra,) )
-        #conn.commit()
         query = len(c.fetchall())
         print(query)
         if query > 0:
             result = True
     except sqlite3.Error as error:
         print('error')
-    #conn.close()
     return result
 
 

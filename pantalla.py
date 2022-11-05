@@ -1,11 +1,12 @@
-from tkinter import Entry, Frame, ttk
+from tkinter import Entry, Frame, StringVar, ttk
 import tkinter
 import customtkinter
 from admin.db import Consulta
+from crear_doc.doc import pdf
 from dbEmpleados import All, Buscar, Insert
 from empleados import Empleado
 from newEmpleado import CalNeto, Calcular
-#from newEmpleado import CalNeto, Calcular
+
 
 customtkinter.set_appearance_mode("System")  # Modes: system (default), light, dark
 customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
@@ -18,8 +19,16 @@ class App(customtkinter.CTk):
     def __init__(self):
         super().__init__()
 
+        self.info = []
+        self.datos = []
+        self.dato_usuario = StringVar()
+        
+    
+
         self.title("Gestor")
         self.geometry(f"{App.WIDTH}x{App.HEIGHT}")
+        self.iconbitmap("image/icono.ico")
+        self.resizable(0,0)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
         # call .on_closing() when app gets closed
        
@@ -31,20 +40,18 @@ class App(customtkinter.CTk):
         self.principal.pack(expand=True,fill="both")
        
  
-
-
         self.cuadro = ttk.Notebook(self.principal)
         self.cuadro.pack(fill="both",expand=True)
         
           # ============ PANTALLAS ============ #
-        self.Inicio = Frame(master=self.cuadro,background="white")
-        self.Registro = Frame(master=self.cuadro,background="white")
-        self.categorias = Frame(master =self.cuadro,background="white")
-        self.parametros = Frame(master=self.cuadro,background="white")
+        self.Inicio = Frame(master=self.cuadro,background="#E5E7E9")
+        self.Registro = Frame(master=self.cuadro,background="#E5E7E9")
+        #self.categorias = Frame(master =self.cuadro,background="white")
+        #self.parametros = Frame(master=self.cuadro,background="white")
         self.cuadro.add(self.Inicio,text='Inicio',padding=10)
         self.cuadro.add(self.Registro,text='Registro',padding=10)
-        self.cuadro.add(self.categorias,text='Catergorias',padding=10)
-        self.cuadro.add(self.parametros,text='Parametros',padding=10)
+        #self.cuadro.add(self.categorias,text='Catergorias',padding=10)
+        #self.cuadro.add(self.parametros,text='Parametros',padding=10)
              # ============ PANTALLAS ============ #
 
 #=======================BOTON CERRAR SESION ==========================#
@@ -58,10 +65,10 @@ class App(customtkinter.CTk):
         self.titulo.grid(row=0, column=1, columnspan=2, pady=10, padx=30, sticky="s")
         
         self.cerrar = customtkinter.CTkButton(master=self.menu,
-                                                text="Cerrar sesion",
+                                                text="Salir",
                                                 border_width=2,  # <- custom border_width
                                                 fg_color=None,  # <- no fg_color
-                                                #command=self.Registro_Empleado
+                                                command=self.on_closing
                                                 )
         self.cerrar.grid(row=0, column=3, columnspan=1, pady=10, padx=30, sticky="s")
   #=======================BOTON CERRAR SESION ==========================#
@@ -79,9 +86,6 @@ class App(customtkinter.CTk):
         ) 
         style.configure("Treeview.Heading",font=("Roboto Medium", 11,'bold'),background="#EAECEE")
     
-
-        
-        
         self.tree = ttk.Treeview(master=self.Inicio,height=10,columns=("#1", "#2"))
         self.tree.grid(row=0,column=2,columnspan=1,padx=10,pady=40)
     
@@ -91,9 +95,6 @@ class App(customtkinter.CTk):
         self.tree.column("#1")
         self.tree.heading('#2',text='Deducciones')
         self.tree.column("#2")
-
-
-
 #===================================frame Inicio============================================#
         self.buscar_dni = customtkinter.CTkEntry(master=self.Inicio,
                                             width=150,
@@ -102,35 +103,29 @@ class App(customtkinter.CTk):
 
       
         self.tabla1 = customtkinter.CTkButton(master=self.Inicio,
-                                                text="ver",
+                                                text="Buscar",
                                                 width=80,
                                                 border_width=2,  # <- custom border_width
                                                 fg_color=None,  # <- no fg_color
                                                 command=self.get_parametros)
         self.tabla1.grid(row=0, column=1, columnspan=1)
 
+        self.usuario = customtkinter.CTkLabel(master=self.Inicio,
+                                               textvariable= self.dato_usuario,
+                                                text_font=("Roboto Medium", -15,))
+        self.usuario.grid(row=3, column=0, columnspan=1, pady=0, padx=20)
+
         self.Guardar = customtkinter.CTkButton(master=self.Inicio,
                                                 text="Descargar",
                                                 width=80,
                                                 border_width=2,  # <- custom border_width
                                                 fg_color=None,  # <- no fg_color
-                                               # command=self.get_parametros
+                                                command=self.descarga
                                                 )
         self.Guardar.grid(row=3, column=2, columnspan=1,padx= 50,pady=20)
        # self.tabla1.pack(pady=50,padx=0)
 
 #===================================frame Inicio============================================#
-
-
-
-
-
-
-
-
-
-
-
 
 
         # ============ frame_registro ============#
@@ -191,15 +186,11 @@ class App(customtkinter.CTk):
                                                 command=self.Registro_Empleado)
         self.button_2.grid(row=8, column=1, columnspan=1, pady=10, padx=30, sticky="e")
 
-        
-
 #===================================frame parametros============================================#
-
-
     def abrir(self,texto):
       top = tkinter.Toplevel()
       top.resizable(0,0)
-      #top.iconbitmap("image/icono.ico")
+      top.iconbitmap("image/icono.ico")
       top.geometry("300x200")
       top = tkinter.Label(top, text=texto)
       top.pack(expand=True)
@@ -212,8 +203,6 @@ class App(customtkinter.CTk):
       
         if(Result == True): 
           print('Empleado Registrado')
-          #self.dni.delete(0, 'end'), self.apellido.delete(0, 'end'), self.nombre.delete(0, 'end'), self.fechaN.delete(0, 'end'),
-          #self.direccion.delete(0, 'end'), self.localidad.delete(0, 'end'), self.telefono.delete(0, 'end')
           self.clear()
           self.abrir(texto='Empleado registrado')
         else: 
@@ -230,44 +219,67 @@ class App(customtkinter.CTk):
 
 
 
-#=====================OBTIENE CONCEPTOS ============#
+#============OBTIENE CONCEPTOS ============#
     def get_parametros(self):
-      
+      #limpia paramentros
+      self.dato_usuario.set('')
+      self.datos = []
+      self.info =[]
       records =self.tree.get_children()
       for element in records:
         self.tree.delete(element)
+      #=================  
       total = 0
       query = Consulta()
       getDni = self.buscar_dni.get()
       if len(getDni)> 0:
-        ver = Buscar(getDni)
-        if ver != None :
-          total_horas = ver[9]
-          self.tree.insert('', 0,text='Horas laborales', values=(f"{total_horas}{' horas'}",(f"{'$'}{CalNeto(total_horas,ver[8])}")))
-          total += CalNeto(total_horas,ver[8])
+        self.datos.append(Buscar(getDni))
+        empleado = Buscar(getDni)
+
+        if empleado != None :
+          self.dato_usuario.set(empleado[1]+" "+empleado[2])
+          total_horas = empleado[9]
+          self.tree.insert('', 0,text='Horas laborales', values=(f"{total_horas}{' horas'}",(f"{'$'}{CalNeto(total_horas,empleado[8])}")))
+          total += CalNeto(total_horas,empleado[8])
+          #======AGREGA DATOS PARA DUC ======#
+          self.info.append(['Horas laborales',(f"{total_horas}{' horas'}"), (f"{'$'}{CalNeto(total_horas,empleado[8])}")])
+          #=================================#
           for row in query:
             self.tree.insert('', 1,text= row[1], values= (f"{row[2]}{'%'} ",(f"{'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")))
+
+            #======AGREGA DATOS PARA DUC ======#
+            self.info.append([row[1], (f"{row[2]}{'%'} "),(f"{'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")])
+   
+            #===================================#
+
             if row[3] == 1: total -= Calcular(getDni,row[2],row[3])
             else: total += Calcular(getDni,row[2],row[3])
+
           self.tree.insert('', 20,text='TOTAL',values=('',(f"{'$'}{round(total,2)}")))
+
+            #======AGREGA DATOS PARA DUC ======#
+          self.info.append(['TOTAL', "",(f"{'$'}{round(total,2)}")])
+   
+          
+            #===================================#
+
        
-      
-     #=========================================================#   
-
-
-     #========================================#
 
 
 
+    #================= DESCARGA PDF =======================#
 
-     #========================================#
+    def descarga(self):
+        pdf(self.info,self.datos)
+        
+    #======================================================#
+        
 
-    def change_appearance_mode(self):
-        print('hola')
-
-
-    def on_closing(self, event=0):
+#===========CERRAR APP================#
+    def on_closing(self):
         self.destroy()
+#===========================#
+       
 
 
 if __name__ == "__main__":
