@@ -6,12 +6,12 @@ conn = sqlite3.connect('liquidaciones.db')
 c= conn.cursor()
 
 #=================INGRESAR NUEVO EMPLEADO ===============#
-def Insert(e,categoria):
+def Insert(e):
     result = False
-    horas = random.randrange(160,200)
+   # horas = random.randrange(160,200)
     try:
         c.execute("INSERT INTO empleados VALUES(?,?,?,?,?,?,?)", (e.dni,e.nombre,e.apellido,e.fechaN,e.direccion,e.localidad,e.telefono))
-        c.execute("INSERT INTO dato_empleado VALUES(?,?,?)", (e.dni,categoria,horas))
+        c.execute("INSERT INTO dato_empleado VALUES(?,?,?)", (e.dni,e.categoria,e.horas))
         conn.commit()
         result = True
     except sqlite3.Error as error:

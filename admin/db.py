@@ -29,13 +29,9 @@ def Crear():
         FOREIGN KEY (categoria)
         REFERENCES honorarios (id_categoria)
     )""")
-    c.execute(""" CREATE TABLE IF NOT EXISTS recibo (
-        id_liq INT PRIMARY KEY,
-        data TEXT NOT NULL,
-        fecha date
-    )""")
+
     c.execute(""" CREATE TABLE IF NOT EXISTS parametros (
-        id_param INT PRIMARY KEY,
+        id_param integer primary key AUTOINCREMENT,
         descripcion TEXT,
         porcentaje REAL,
         tipo INT
@@ -89,3 +85,35 @@ def LoginDB(usario,contra):
 
 
 
+def Insert_p(e):
+    result = False
+    if len(e.descrip) != 0 and len(e.porcentaje)!=0 and len(e.tipo)!=0:
+        try:
+            c.execute("INSERT INTO parametros VALUES (null,?,?,?)",(e.descrip,e.porcentaje,e.tipo))
+            conn.commit()
+            result = True
+        except sqlite3.Error as error:
+            print("Error", error)
+    #conn.close()
+    return result
+
+def update(descrip,porc,tipo,id):
+    result = False
+    if len(descrip) != 0 and len(porc)!=0 and len(tipo)!=0:
+        try:
+            result = c.execute('''UPDATE parametros SET descripcion = ?,porcentaje = ?,tipo = ? WHERE id_param = ?''',(descrip,porc,tipo,id))
+            conn.commit()
+            result = True
+        except sqlite3.Error as error:
+            print("Error", error)
+    return result
+
+def delete(id):
+    result = False
+    try:
+        result = c.execute('''DELETE FROM parametros WHERE id_param = ?''',(id,))
+        conn.commit()
+        result = True
+    except sqlite3.Error as error:
+         print("Error", error)
+    return result

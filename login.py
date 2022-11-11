@@ -1,9 +1,8 @@
 import tkinter
-from tkinter import StringVar, messagebox
 import customtkinter
 from admin.db import *
+from alert import mens
 from pantalla import App
-
 
 
 customtkinter.set_appearance_mode("Ligth")  # Modes: "System" (standard), "Dark", "Light"
@@ -25,17 +24,7 @@ def Verificar():
             inicio = App()
             inicio.mainloop()     
         else:
-          abrir()
-
-#======= ERROR ========#
-def abrir():
-    top = tkinter.Toplevel()
-    top.resizable(0,0)
-    top.iconbitmap("image/icono.ico")
-    top.geometry("200x100")
-    top = tkinter.Label(top, text="Usuario incorrecto")
-    top.pack(expand=True)
-
+          mens(1,"Usuario incorrecto")
 
 
 
