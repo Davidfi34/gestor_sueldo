@@ -1,5 +1,6 @@
 
-from tkinter.messagebox import showerror, showwarning, showinfo
+import tkinter
+from tkinter.messagebox import askyesno, showerror, showinfo
 
 
 def mens(tipo,text):
@@ -7,9 +8,11 @@ def mens(tipo,text):
         showerror(
             title='Error',
             message=text)
-    else: 
+    elif tipo == 2: 
       showinfo(
         title='Informacion',
         message=text)
-
+    else:
+      respuesta = askyesno("Gestor", text)
+      return respuesta
 

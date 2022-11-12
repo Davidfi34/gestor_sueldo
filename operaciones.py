@@ -1,5 +1,5 @@
 from dbEmpleados import Buscar, getCateg
-from empleados import Empleado
+
 
 #============ CALCULA IMPORTES =======#
 def Calcular(dni,porcetaje,tipo):

@@ -1,6 +1,6 @@
 import sqlite3
 from empleados import Empleado
-import random
+
 
 conn = sqlite3.connect('liquidaciones.db')
 c= conn.cursor()

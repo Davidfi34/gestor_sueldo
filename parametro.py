@@ -3,5 +3,5 @@ class Parametro:
         self.descrip =descrip
         self.porcentaje = porcentaje
         self.tipo = tipo
-        #self.id_param =id
+     
      

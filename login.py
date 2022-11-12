@@ -31,7 +31,7 @@ def Verificar():
 frame_1 = customtkinter.CTkFrame(master=login)
 frame_1.pack(pady=60, padx=60,fill="both", expand=True)
 
-label_1 = customtkinter.CTkLabel(text='LOGIN',master=frame_1, justify=tkinter.LEFT)
+label_1 = customtkinter.CTkLabel(text='Gestor',master=frame_1, justify=tkinter.LEFT)
 label_1.config(font=("Helvatical bold", 20))
 label_1.pack(pady=40, padx=40)
 

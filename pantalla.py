@@ -1,14 +1,13 @@
-from tkinter import Frame, PhotoImage, StringVar, ttk
-import tkinter
+from tkinter import *
+from tkinter import ttk 
 import customtkinter
 from admin.db import Consulta, Insert_p, delete, update
 from alert import mens
 from crear_doc.doc import pdf
-from dbEmpleados import All, Buscar, Insert
+from dbEmpleados import  Buscar, Insert
 from empleados import Empleado
 from operaciones import CalNeto, Calcular
 from tkcalendar import DateEntry
-from PIL import Image, ImageTk
 
 from parametro import Parametro
 
@@ -130,9 +129,12 @@ class App(customtkinter.CTk):
                                             placeholder_text="Ingresar DNI")
         self.buscar_dni.grid(row=2, column=0, columnspan=1,padx= 20,pady=20) 
     
+        self.icon_buscar = PhotoImage(file="image/buscar.png")
+
         self.buscar = customtkinter.CTkButton(master=self.left,
                                                 text="Buscar",
                                                 width=80,
+                                                image=self.icon_buscar,
                                                 border_width=2,  # <- custom border_width
                                                 fg_color=None,  # <- no fg_color
                                                 command=self.get_parametros)
@@ -143,9 +145,12 @@ class App(customtkinter.CTk):
                                                 text_font=("Roboto Medium", -15,))
         self.usuario.grid(row=4, column=0, columnspan=1,padx= 20,pady=20) 
    
+        self.icon_descarga = PhotoImage(file="image/descarga.png")
+
         self.Descargar = customtkinter.CTkButton(master=self.Inicio,
                                                 text="Descargar",
                                                 width=80,
+                                                image=self.icon_descarga,
                                                 fg_color="#58D68D",
                                                 hover_color="#ABEBC6",  # <- no fg_color
                                                 command=self.descarga
@@ -322,10 +327,12 @@ class App(customtkinter.CTk):
 #================  ELIMINA CONCEPTO  =====================#
     def eliminar(self):
           self.get_select()
-          result =delete(self.id_dato.get())
-          if result:
-            self.actualizar()
-            self.id_dato.set("")
+          m = mens(3,"¿Desea eliminar registro?")
+          if m:
+            result =delete(self.id_dato.get())
+            if result:
+              self.actualizar()
+              self.id_dato.set("")
 #=========================================================#
 
         
@@ -352,7 +359,6 @@ class App(customtkinter.CTk):
 
 #==========  REGISTRAR EMPLEADO  ====================#
     def Registro_Empleado(self):
-       # if len(dni=self.dni.get())!= 0 and len(dni=self.apellido.get())!= 0 and len(dni=self.nombre.get())!= 0 and len(dni=self.fechaN.get())!= 0  and len(dni=self.direccion.get())!= 0  and len(dni=self.direccion.get())!= 0 and len(dni=self.localidad.get())!= 0 and len(dni=self.horas.get())!= 0 and len(dni=self.categoria.get())!= 0:
           nuevo = Empleado(dni=self.dni.get(),apellido=self.apellido.get(),nombre=self.nombre.get(),
           fechaN=self.fechaN.get(),direccion= self.direccion.get(),localidad= self.localidad.get(),
           horas=int(self.horas.get()),categoria=int(self.categoria.get()))
@@ -362,7 +368,7 @@ class App(customtkinter.CTk):
             self.clear()
             mens(2,'Empleado registrado')
           else: mens(1,'Error empleado no registrado')
-       # else: mens(1,'Error empleado no registrado')
+  
 #=======================================================#
 
 
