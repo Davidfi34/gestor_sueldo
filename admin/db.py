@@ -16,8 +16,7 @@ def Crear():
         apellido TEXT,
         fechaN DATE,
         direccion TEXT,
-        localidad TEXT,
-        telefono INT
+        localidad TEXT
     )""")
 
     c.execute(""" CREATE TABLE IF NOT EXISTS dato_empleado (
@@ -49,7 +48,7 @@ def Crear():
 def IngresarDatos():
     try:
         c.execute("INSERT INTO administrador(contra,usuario) VALUES(?,?)", ('1234','admin',))
-        c.execute("INSERT INTO categorias VALUES (1,'operario 1',350),(2,'operario 2',380),(3,'operario 3',420)")
+        c.execute("INSERT INTO categorias VALUES (1,'operario 1',450),(2,'operario 2',550),(3,'operario 3',750)")
         c.execute("INSERT INTO parametros VALUES (1,'Obra social',3,1),(2,'Jubilacion',11,1),(3,'Sindicato',2.5,1),(4,'Ley 19032',3,1),(5,'Presetismo',8.3,2)")
         print('creo registro')
         conn.commit()

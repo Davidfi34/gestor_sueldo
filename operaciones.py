@@ -5,8 +5,8 @@ from empleados import Empleado
 def Calcular(dni,porcetaje,tipo):
     total = 0 
     ver = Buscar(dni)
-    total_horas = ver[9]
-    categ = ver[8]
+    total_horas = ver[8]
+    categ = ver[7]
 
     costo_hora = getCateg(categ)[0]
     total_neto = total_horas * costo_hora

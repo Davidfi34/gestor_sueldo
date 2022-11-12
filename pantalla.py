@@ -45,7 +45,7 @@ class App(customtkinter.CTk):
         self.iconbitmap("image/icono.ico")
         self.resizable(0,0)
         self.protocol("WM_DELETE_WINDOW", self.on_closing)
-        # call .on_closing() when app gets closed
+      
        
         # ============ PANTALLA PRINCIPAL ============ #
 
@@ -146,8 +146,8 @@ class App(customtkinter.CTk):
         self.Descargar = customtkinter.CTkButton(master=self.Inicio,
                                                 text="Descargar",
                                                 width=80,
-                                                border_width=2,  # <- custom border_width
-                                                fg_color=None,  # <- no fg_color
+                                                fg_color="#58D68D",
+                                                hover_color="#ABEBC6",  # <- no fg_color
                                                 command=self.descarga
                                                 )
         self.Descargar.grid(row=6, column=3, columnspan=1,padx= 50,pady=20)
@@ -164,53 +164,54 @@ class App(customtkinter.CTk):
 
 
         self.apellido = customtkinter.CTkEntry(master=self.Registro,
-                                              width=200,
+                                              width=250,
                                             placeholder_text="Apellido")
         self.apellido.grid(row=1, column=0, columnspan=1, pady=20, padx=30, sticky="n")
 
 
 
         self.nombre = customtkinter.CTkEntry(master=self.Registro,
-                                              width=200,
+                                              width=250,
                                             placeholder_text="Nombre")
         self.nombre.grid(row=1, column=1, columnspan=1, pady=20, padx=30, sticky="n")
 
         self.dni = customtkinter.CTkEntry(master=self.Registro,
-                                            width=200,
+                                            width=250,
                                             placeholder_text="DNI")
         self.dni.grid(row=2, column=0, columnspan=1, pady=20, padx=30, sticky="n")
 
-        self.Ingreso =customtkinter.CTkLabel(self.Registro,text="Fecha de nacimiento",text_font=("Roboto Medium", -14,),text_color='gray').place(x= 390,y=137)
-        self.campofecha = DateEntry(self.Registro,date_pattern='y-mm-dd',width=15,year= 2004,month= 10,day=1,textvariable = self.fechaN).place(x= 660,y=175)
+        self.Ingreso =customtkinter.CTkLabel(self.Registro,text="Fecha de nacimiento",text_font=("Roboto Medium", -14,),text_color='gray').place(x= 340,y=137)
+        self.campofecha = DateEntry(self.Registro,date_pattern='y-mm-dd',width=15,year= 2004,month= 10,day=1,textvariable = self.fechaN)
+        self.campofecha.place(x= 600,y=175)
 
         self.direccion = customtkinter.CTkEntry(master=self.Registro,
-                                              width=200,
+                                              width=250,
                                             placeholder_text="Direccion")
         self.direccion.grid(row=3, column=0, columnspan=1, pady=20, padx=30, sticky="n")
 
         self.localidad = customtkinter.CTkEntry(master=self.Registro,
-                                              width=200,
+                                              width=250,
                                             placeholder_text="localidad")
         self.localidad.grid(row=3, column=1, columnspan=1, pady=20, padx=30, sticky="n")
 
 
-        self.Labelcategoria =customtkinter.CTkLabel(self.Registro,text="Nro. Categoria: ",text_font=("Roboto Medium", -14,),text_color='gray').place(x= 375,y=275)
+        self.Labelcategoria =customtkinter.CTkLabel(self.Registro,text="Nro. Categoria: ",text_font=("Roboto Medium", -14,),text_color='gray').place(x= 320,y=275)
         self.categoria = customtkinter.CTkComboBox(master=self.Registro,
                                                     values=['1','2','3'])
-        self.categoria.place(x= 500,y=275)
+        self.categoria.place(x= 450,y=275)
   
         self.horas = customtkinter.CTkEntry(master=self.Registro,
-                                                width=200,
+                                                width=250,
                                             placeholder_text="total de horas:")
         self.horas.grid(row=5, column=0, columnspan=1, pady=20, padx=30, sticky="n")
 
         
         self.button_2 = customtkinter.CTkButton(master=self.Registro,
                                                 text="Registrar",
-                                                border_width=2,  # <- custom border_width
-                                                fg_color=None,  # <- no fg_color
+                                                fg_color="#58D68D",
+                                                hover_color="#ABEBC6", # <- no fg_color
                                                 command=self.Registro_Empleado)
-        self.button_2.grid(row=5, column=1, columnspan=1, pady=50, padx=30, sticky="e")
+        self.button_2.grid(row=6, column=2, columnspan=1, pady=50, padx=10, sticky="e")
 
 #=========================================================================#
 
@@ -305,12 +306,15 @@ class App(customtkinter.CTk):
         self.obtener()
 
 
+
+
 #================ACTUALIZA TABLA DE CONCEPTO =====================#
     def actualizar(self):
         self.tree1.delete(*self.tree1.get_children())
         self.dato_descrip.delete(0, 'end')
         self.dato_porc.delete(0, 'end')
         self.dato_tipo.set("")
+        self.id_dato.set("")
         self.obtener()
 #=================================================================#  
 
@@ -333,13 +337,14 @@ class App(customtkinter.CTk):
           result = update(descrip=self.dato_descrip.get(),porc=self.dato_porc.get(),tipo=self.dato_tipo.get(),id=self.id_dato.get())
           if result: mens(2,"Actualizado")  
           else: mens(1,"sin datos!")
-          self.id_dato.set("")
+          
         else: 
         #========== CREA COCEPTO ===========#
             nuevo =Parametro(descrip=self.dato_descrip.get(),porcentaje=self.dato_porc.get(),tipo=self.dato_tipo.get())
             result = Insert_p(nuevo)
             if result: mens(2,"Concepto creado")  
             else: mens(1,"sin datos!")
+        self.id_dato.set("")
         self.actualizar()
 #==============================================================# 
       
@@ -347,17 +352,17 @@ class App(customtkinter.CTk):
 
 #==========  REGISTRAR EMPLEADO  ====================#
     def Registro_Empleado(self):
-        nuevo = Empleado(dni=self.dni.get(),apellido=self.apellido.get(),nombre=self.nombre.get(),
-        fechaN=self.fechaN.get(),direccion= self.direccion.get(),localidad= self.localidad.get(),
-        telefono= self.telefono.get(),horas=int(self.horas.get()),categoria=int(self.categoria.get()))
-        Result = Insert(nuevo)
-      
-        if(Result == True): 
-          print('Empleado Registrado')
-          self.clear()
-          mens(2,'Empleado registrado')
-        else: 
-          mens(1,'Error empleado no registrado')
+       # if len(dni=self.dni.get())!= 0 and len(dni=self.apellido.get())!= 0 and len(dni=self.nombre.get())!= 0 and len(dni=self.fechaN.get())!= 0  and len(dni=self.direccion.get())!= 0  and len(dni=self.direccion.get())!= 0 and len(dni=self.localidad.get())!= 0 and len(dni=self.horas.get())!= 0 and len(dni=self.categoria.get())!= 0:
+          nuevo = Empleado(dni=self.dni.get(),apellido=self.apellido.get(),nombre=self.nombre.get(),
+          fechaN=self.fechaN.get(),direccion= self.direccion.get(),localidad= self.localidad.get(),
+          horas=int(self.horas.get()),categoria=int(self.categoria.get()))
+          Result = Insert(nuevo)
+        
+          if Result: 
+            self.clear()
+            mens(2,'Empleado registrado')
+          else: mens(1,'Error empleado no registrado')
+       # else: mens(1,'Error empleado no registrado')
 #=======================================================#
 
 
@@ -365,8 +370,8 @@ class App(customtkinter.CTk):
 #====================CLEAR ENTRY==============================#
     def clear(self):
           self.dni.delete(0, 'end'), self.apellido.delete(0, 'end'), self.nombre.delete(0, 'end'),
-          self.direccion.delete(0, 'end'), self.localidad.delete(0, 'end'), self.telefono.delete(0, 'end'),
-          self.horas.delete(0, 'end')
+          self.direccion.delete(0, 'end'), self.localidad.delete(0, 'end'),self.horas.delete(0, 'end'),
+          self.categoria.set("")
 #==================================================#
 
 
@@ -389,24 +394,27 @@ class App(customtkinter.CTk):
         if empleado != None :
           self.buscar_dni.delete(0, 'end')
           self.dato_usuario.set(empleado[1]+" "+empleado[2]+"\n\nDNI: "+getDni)
-          total_horas = empleado[9]
-          self.tree.insert('', 0,text='Horas laborales', values=(f"{total_horas}{' horas'}",(f"{'$'}{CalNeto(total_horas,empleado[8])}")))
-          total += CalNeto(total_horas,empleado[8])
+      
+          total_horas = empleado[8]
+
+          self.tree.insert('', 0,text='Horas laborales', values=(f"{total_horas}{' horas'}",(f"{'$'}{CalNeto(total_horas,empleado[7])}")))
+          total += CalNeto(total_horas,empleado[7])
           #======AGREGA DATOS PARA DUC ======#
-          self.info.append(['Horas laborales',(f"{total_horas}{' horas'}"), (f"{'$'}{CalNeto(total_horas,empleado[8])}")])
+          self.info.append(['Horas laborales',(f"{total_horas}{' horas'}"), (f"{'$'}{CalNeto(total_horas,empleado[7])}")])
           #=================================#
           for row in query:
-            self.tree.insert('', 1,text= row[1], values= (f"{row[2]}{'%'} ",(f"{'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")))
+      
+            self.tree.insert('', 1,text= row[1], values= (f"{row[2]}{'%'} ",(f" {' ' if row[3] == 2 else '-'} {'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")))
 
             #======AGREGA DATOS PARA DUC ======#
-            self.info.append([row[1], (f"{row[2]}{'%'} "),(f"{'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")])
+            self.info.append([row[1], (f"{row[2]}{'%'} "),(f"{' ' if row[3] == 2 else '-'} {'$'}{round(Calcular(getDni,row[2],row[3]), 2)}")])
             #===================================#
 
             if row[3] == 1: total -= Calcular(getDni,row[2],row[3])
             else: total += Calcular(getDni,row[2],row[3])
          
-
           self.tree.insert('', 20,text='TOTAL',values=('',(f"{'$'}{round(total,2)}")))
+          
 
           #======AGREGA DATOS PARA DUC ======#
           self.info.append(['TOTAL', "",(f"{'$'}{round(total,2)}")])
