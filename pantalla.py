@@ -338,46 +338,80 @@ class App(customtkinter.CTk):
         
 #======================== GUARDAR =============================#
     def update_param(self):
-        id =self.id_dato.get()
-        #=====ACTUALIZA SI TIENE ID =====#
-        if len(id)!= 0:
-          result = update(descrip=self.dato_descrip.get(),porc=self.dato_porc.get(),tipo=self.dato_tipo.get(),id=self.id_dato.get())
-          if result: mens(2,"Actualizado")  
-          else: mens(1,"sin datos!")
-          
-        else: 
-        #========== CREA COCEPTO ===========#
-            nuevo =Parametro(descrip=self.dato_descrip.get(),porcentaje=self.dato_porc.get(),tipo=self.dato_tipo.get())
-            result = Insert_p(nuevo)
-            if result: mens(2,"Concepto creado")  
+      if self.String(self.dato_descrip.get()) and self.FloatInt(self.dato_porc.get()) and self.Number(self.dato_tipo.get()):
+          id =self.id_dato.get()
+          #=====ACTUALIZA SI TIENE ID =====#
+          if len(id)!= 0:
+            result = update(descrip=self.dato_descrip.get(),porc=self.dato_porc.get(),tipo=self.dato_tipo.get(),id=self.id_dato.get())
+            if result: mens(2,"Actualizado")  
             else: mens(1,"sin datos!")
-        self.id_dato.set("")
-        self.actualizar()
+            
+          else: 
+          #========== CREA COCEPTO ===========#
+              nuevo =Parametro(descrip=self.dato_descrip.get(),porcentaje=self.dato_porc.get(),tipo=self.dato_tipo.get())
+              result = Insert_p(nuevo)
+              if result: mens(2,"Concepto creado")  
+              else: mens(1,"sin datos!")
+          self.id_dato.set("")
+          self.actualizar()
+      else: mens(1,"Error, datos incorrectos!") 
 #==============================================================# 
       
 
 
 #==========  REGISTRAR EMPLEADO  ====================#
     def Registro_Empleado(self):
+      if self.String(self.apellido.get())and self.String(self.nombre.get()) and self.String(self.nombre.get())and self.ValidarDni(self.dni.get()) and self.String(self.fechaN.get()) and self.String(self.direccion.get()) and self.String(self.localidad.get()) and self.Number(self.horas.get()) and self.Number(self.categoria.get()):
           nuevo = Empleado(dni=self.dni.get(),apellido=self.apellido.get(),nombre=self.nombre.get(),
           fechaN=self.fechaN.get(),direccion= self.direccion.get(),localidad= self.localidad.get(),
           horas=int(self.horas.get()),categoria=int(self.categoria.get()))
-          Result = Insert(nuevo)
-        
+          Result = Insert(nuevo)      
           if Result: 
-            self.clear()
-            mens(2,'Empleado registrado')
+              self.clear()
+              mens(2,'Empleado registrado')
           else: mens(1,'Error empleado no registrado')
+      else: mens(1,'Error! los datos ingresados no son correctos')
+
+#==========VALIDAR CANTIDAD DE NUMEROS DE DNI ================#
+    def ValidarDni(self,data):
+      result =False
+      if self.Number(data) and len(data)> 7: result =True
+      return result
+
+#==========VERIFICA SI EL DATO ES NUMERICO ===============#
+    def FloatInt(self,data):
+        try:
+          return float(data) if "." in data else int(data)
+        except:
+          return FALSE
+
+#=========================================================#
+
+
+#==========VERIFICA SI CONTIENE UN ENTERO ===============#
+    def Number(self,data):
+      try:
+        int(data)
+        result = True
+      except(ValueError): result=False 
+      return result
+#=========================================================#
+
+# ========VERIFICA QUE CONTENGA MAS DE UN CARACTER=========#    
+    def String(self,data):
+        result =False
+        if len(data) > 0: result = True
+        return result
+#==========================================================#
   
 #=======================================================#
-
 
 
 #====================CLEAR ENTRY==============================#
     def clear(self):
           self.dni.delete(0, 'end'), self.apellido.delete(0, 'end'), self.nombre.delete(0, 'end'),
           self.direccion.delete(0, 'end'), self.localidad.delete(0, 'end'),self.horas.delete(0, 'end'),
-          self.categoria.set("")
+          self.categoria.set(""),self.fechaN.set("")
 #==================================================#
 
 
@@ -394,7 +428,7 @@ class App(customtkinter.CTk):
       total = 0
       query = Consulta()
       getDni = self.buscar_dni.get()
-      if len(getDni)> 0:
+      if self.ValidarDni(getDni):
         self.datos.append(Buscar(getDni))
         empleado = Buscar(getDni)
         if empleado != None :
@@ -424,7 +458,7 @@ class App(customtkinter.CTk):
 
           #======AGREGA DATOS PARA DUC ======#
           self.info.append(['TOTAL', "",(f"{'$'}{round(total,2)}")])
-        else: mens(1,"El DNI no esta registrado!")
+        else: mens(1,"El DNI no está registrado!")
       else: mens(1,"Error, ingresar dni!")
 #==========================================#
 
