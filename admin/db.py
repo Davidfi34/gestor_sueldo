@@ -75,7 +75,6 @@ def LoginDB(usario,contra):
     try:
         c.execute("SELECT * FROM administrador WHERE usuario = ? AND contra = ?",(usario,contra,) )
         query = len(c.fetchall())
-        print(query)
         if query > 0:
             result = True
     except sqlite3.Error as error:

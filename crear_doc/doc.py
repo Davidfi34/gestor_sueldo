@@ -31,7 +31,7 @@ def pdf(parametros,usuario):
                 align = 'L', fill = 0)
         pdf.cell(w = 0, h = 10, txt = (f"DNI: {usuario[0][0]}"), border = 1, ln=1,
                 align = 'L', fill = 0)
-        pdf.cell(w = 0, h = 10, txt = (f"Categoria Nro:{usuario[0][8]}"), border = 1, ln=1,
+        pdf.cell(w = 0, h = 10, txt = (f"Categoria Nro:{usuario[0][7]}"), border = 1, ln=1,
                 align = 'L', fill = 0)
         pdf.cell(w = 0, h = 10, txt = 'Liquidacion mes de Noviembre 2022', border = 1, ln=1,
                 align = 'L', fill = 0)

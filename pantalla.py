@@ -35,6 +35,10 @@ class App(customtkinter.CTk):
         self.dato_porcentaje = StringVar()
         self.dato_tipo = StringVar()
         self.item =StringVar()
+
+        self.iconAct = PhotoImage(file="image/actualizar.png")
+        self.iconEdit = PhotoImage(file="image/edit.png")
+        self.iconDelete = PhotoImage(file="image/delete.png")
  
      
 
@@ -97,7 +101,7 @@ class App(customtkinter.CTk):
         style.configure("Treeview.Heading",font=("Roboto Medium", 10,'bold'),background="#EAECEE")
     
         self.tree = ttk.Treeview(master=self.Inicio,height=10,columns=("#1", "#2"))
-        self.tree.grid(row=0,column=3,columnspan=1,padx=20,pady=20)
+        self.tree.grid(row=0,column=3,columnspan=1,padx=20,pady=30)
     
         self.tree.heading('#0',text='Concepto')
         self.tree.column("# 0" )
@@ -113,7 +117,7 @@ class App(customtkinter.CTk):
         self.left = customtkinter.CTkFrame(master=self.Inicio,
                                                  width=200,
                                                  corner_radius=20)
-        self.left.grid(row=0, column=0, sticky="nswe",pady=20,padx=20)
+        self.left.grid(row=0, column=0, sticky="nswe",pady=20,padx=10)
 
 
 
@@ -156,6 +160,16 @@ class App(customtkinter.CTk):
                                                 command=self.descarga
                                                 )
         self.Descargar.grid(row=6, column=3, columnspan=1,padx= 50,pady=20)
+
+
+        self.boton_actualizar2 = customtkinter.CTkButton(master=self.Inicio,
+                                                text="",
+                                                image=self.iconAct,
+                                                width= 20,
+                                                fg_color=None,
+                                                command= self.get_parametros
+                                                )
+        self.boton_actualizar2.place(x=770,y=30)
 
 #===================================frame Inicio============================================#
 
@@ -242,9 +256,7 @@ class App(customtkinter.CTk):
                                                  corner_radius=20)
         self.frame_left.grid(row=0, column=0, sticky="nswe",pady=20,padx=50)
 
-        self.iconAct = PhotoImage(file="image/actualizar.png")
-        self.iconEdit = PhotoImage(file="image/edit.png")
-        self.iconDelete = PhotoImage(file="image/delete.png")
+
 
         self.boton_actualizar = customtkinter.CTkButton(master=self.Parametros,
                                                 text="",
@@ -418,13 +430,11 @@ class App(customtkinter.CTk):
 
 #============OBTIENE CONCEPTOS ============#
     def get_parametros(self):
+      self.reiniciar(self.tree)
       #limpia paramentros
       self.dato_usuario.set('')
       self.datos = []
       self.info =[]
-      records =self.tree.get_children()
-      for element in records:
-        self.tree.delete(element)
       total = 0
       query = Consulta()
       getDni = self.buscar_dni.get()
@@ -432,7 +442,7 @@ class App(customtkinter.CTk):
         self.datos.append(Buscar(getDni))
         empleado = Buscar(getDni)
         if empleado != None :
-          self.buscar_dni.delete(0, 'end')
+          #self.buscar_dni.delete(0, 'end')
           self.dato_usuario.set(empleado[1]+" "+empleado[2]+"\n\nDNI: "+getDni)
       
           total_horas = empleado[8]
@@ -462,7 +472,15 @@ class App(customtkinter.CTk):
       else: mens(1,"Error, ingresar dni!")
 #==========================================#
 
-       
+
+#=======Limpiar tabla principal ======#
+    def reiniciar(self,tipo):
+      records = tipo.get_children()
+      for element in records:
+        self.tree.delete(element)
+    
+#=======================================#
+
 
 #================= DESCARGA PDF =======================#
     def descarga(self):
